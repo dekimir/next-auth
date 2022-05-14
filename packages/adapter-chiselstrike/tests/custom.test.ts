@@ -21,11 +21,11 @@ beforeEach(async () => {
 test('createUser returns payload', async () => {
     const uMinimal = await a.createUser({ emailVerified: '2022-03-01' })
     expect(uMinimal).not.toBeNull()
-    expect(uMinimal?.emailVerified).toBe('2022-03-01')
+    expect(uMinimal?.emailVerified).toStrictEqual(new Date('2022-03-01'))
 
     const u2 = await a.createUser({ emailVerified: '2022-03-02', name: 'Bono', email: 'a@b.co', image: '' })
     expect(u2).not.toBeNull()
-    expect(u2?.emailVerified).toBe('2022-03-02')
+    expect(u2?.emailVerified).toStrictEqual(new Date('2022-03-02'))
     expect(u2?.name).toBe('Bono')
     expect(u2?.email).toBe('a@b.co')
     expect(u2?.image).toBe('')
@@ -60,7 +60,7 @@ test('getUserByEmail returns null for non-existing email', async () => {
 test('updateUser updates correctly', async () => {
     const id = (await a.createUser({ emailVerified: '2022-03-03', name: 'Popeye' }))?.id
     const res = await a.updateUser({ id, name: 'Bluto', image: 'jpg' })
-    expect(res).toStrictEqual({ name: 'Bluto', image: 'jpg', emailVerified: '2022-03-03', id })
+    expect(res).toStrictEqual({ name: 'Bluto', image: 'jpg', emailVerified: new Date('2022-03-03'), id })
     if (!id) { return }
     const get = await a.getUser(id)
     expect(get).toStrictEqual(res)

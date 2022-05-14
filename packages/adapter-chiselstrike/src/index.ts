@@ -44,7 +44,7 @@ export class ChiselStrikeAdapter implements Adapter {
     createUser = async (user: Omit<AdapterUser, "id">): Promise<AdapterUser> => {
         const resp = await this.secFetch(this.users(), { method: 'POST', body: JSON.stringify(user) })
         await ensureOK(resp, `posting user ${JSON.stringify(user)}`);
-        return await resp.json()
+        return userFromJson(await resp.json())
     }
 
     getUser = async (id: string): Promise<AdapterUser | null> => {
@@ -66,7 +66,7 @@ export class ChiselStrikeAdapter implements Adapter {
         const body = JSON.stringify(u)
         const put = await this.secFetch(this.users(`/${user.id}`), { method: 'PUT', body })
         await ensureOK(put, `writing user ${body}`)
-        return u
+        return userFromJson(u)
     }
 
     getUserByAccount = async (providerAccountId: Pick<Account, "provider" | "providerAccountId">): Promise<AdapterUser | null> => {
@@ -74,7 +74,7 @@ export class ChiselStrikeAdapter implements Adapter {
         if (!acct) { return null }
         const uresp = await this.secFetch(this.users(`/${acct.userId}`))
         await ensureOK(uresp, `getting user ${acct.userId}`)
-        return await uresp.json()
+        return userFromJson(await uresp.json())
     }
 
     // deleteUser?: ((userId: string) => Promise<void> | Awaitable<AdapterUser | null | undefined>) | undefined;
@@ -112,7 +112,7 @@ export class ChiselStrikeAdapter implements Adapter {
         if (!session) { return null }
         const rUser = await this.secFetch(`${this.users()}/${session.userId}`)
         await ensureOK(rUser, `fetching user ${session.userId}`)
-        return { session: toAdapter(session), user: await rUser.json() }
+        return { session: toAdapter(session), user: userFromJson(await rUser.json()) }
     }
 
     // updateSession: (session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">) => Awaitable<AdapterSession | null | undefined>;
