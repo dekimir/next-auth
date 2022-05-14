@@ -49,11 +49,12 @@ export class ChiselStrikeAdapter implements Adapter {
 
     getUser = async (id: string): Promise<AdapterUser | null> => {
         const resp = await this.secFetch(this.users(`/${id}`))
-        return resp.ok ? await resp.json() : null
+        if (!resp.ok) { return null }
+        return userFromJson(await resp.json())
     }
 
     getUserByEmail = async (email: string): Promise<AdapterUser | null> => {
-        return firstElementOrNull(await this.secFetch(this.users(`?${makeFilter({ email })}`)))
+        return userFromJson(await firstElementOrNull(await this.secFetch(this.users(`?${makeFilter({ email })}`))))
     }
 
     updateUser = async (user: Partial<AdapterUser>): Promise<AdapterUser> => {
@@ -155,6 +156,10 @@ export class ChiselStrikeAdapter implements Adapter {
         await this.secFetch(this.users('?all=true'), { method: 'DELETE' })
         await this.secFetch(this.tokens('?all=true'), { method: 'DELETE' })
     }
+}
+
+function userFromJson(user: any): AdapterUser {
+    return user ? { ...user, emailVerified: new Date(user.emailVerified) } : null
 }
 
 async function ensureOK(resp: Response, during: string) {

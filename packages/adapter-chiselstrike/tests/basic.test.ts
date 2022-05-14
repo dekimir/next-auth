@@ -14,8 +14,7 @@ runBasicTests(
                 return (await adapter.getSessionAndUser(sessionToken))?.session
             },
             user: async (id: string) => {
-                const user = await adapter.getUser(id)
-                return { ...user, emailVerified: new Date(user.emailVerified) }
+                return await adapter.getUser(id)
             },
             account: async (providerAccountId: { provider: string; providerAccountId: string }) => {
                 const providerFilter = providerAccountId.provider ? `.provider=${providerAccountId.provider}` : ''
