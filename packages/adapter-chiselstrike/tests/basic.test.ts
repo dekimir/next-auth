@@ -40,10 +40,10 @@ runBasicTests(
                     { headers: { 'ChiselAuth': authSecret } })
                 if (!res.ok) { throw new Error(`Fetching token ${JSON.stringify(params)}: ${res.statusText}`) }
                 const jres = await res.json()
-                if (!Array.isArray(jres) || jres.length < 1) {
+                if (!Array.isArray(jres)) {
                     throw new Error(`Fetch result for token ${JSON.stringify(params)}: ${JSON.stringify(jres)}`)
                 }
-                return jres[0]
+                return jres.length < 1 ? null : jres[0]
             }
         }
     }
