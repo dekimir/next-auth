@@ -43,7 +43,10 @@ runBasicTests(
                 if (!Array.isArray(jres)) {
                     throw new Error(`Fetch result for token ${JSON.stringify(params)}: ${JSON.stringify(jres)}`)
                 }
-                return jres.length < 1 ? null : jres[0]
+                if (jres.length < 1) { return null }
+                let token = { ...jres[0], expires: new Date(jres[0].expires) }
+                delete token.id
+                return token
             }
         }
     }
