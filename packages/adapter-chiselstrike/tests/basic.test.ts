@@ -14,7 +14,7 @@ runBasicTests(
             },
             session: async (sessionToken: string) => {
                 const su = await adapter.getSessionAndUser(sessionToken);
-                return su?.session
+                return su ? su.session : null
             },
             user: async (id: string) => {
                 return await adapter.getUser(id)
