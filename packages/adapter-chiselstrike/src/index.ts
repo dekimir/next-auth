@@ -103,7 +103,7 @@ export class ChiselStrikeAdapter implements Adapter {
         const str = JSON.stringify(session);
         const resp = await this.secFetch(this.sessions(), { method: 'POST', body: str })
         await ensureOK(resp, `posting session ${JSON.stringify(session)}`);
-        return toAdapter(await resp.json())
+        return sessionFromJson(await resp.json())
     }
 
     // getSessionAndUser: (sessionToken: string) => Awaitable<{ session: AdapterSession; user: AdapterUser; } | null>;
@@ -112,7 +112,7 @@ export class ChiselStrikeAdapter implements Adapter {
         if (!session) { return null }
         const rUser = await this.secFetch(`${this.users()}/${session.userId}`)
         await ensureOK(rUser, `fetching user ${session.userId}`)
-        return { session: toAdapter(session), user: userFromJson(await rUser.json()) }
+        return { session: sessionFromJson(session), user: userFromJson(await rUser.json()) }
     }
 
     // updateSession: (session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">) => Awaitable<AdapterSession | null | undefined>;
@@ -177,7 +177,7 @@ async function firstElementOrNull(resp: Response) {
     return j[0]
 }
 
-function toAdapter(session: any): AdapterSession {
+function sessionFromJson(session: any): AdapterSession {
     return { ...session, expires: new Date(session.expires), id: session.id ?? 'impossible: fetched CSession has null ID' }
 }
 
