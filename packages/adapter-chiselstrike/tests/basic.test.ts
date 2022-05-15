@@ -27,10 +27,10 @@ runBasicTests(
                     { headers: { 'ChiselAuth': authSecret } })
                 if (!res.ok) { throw new Error(`Fetching account ${JSON.stringify(providerAccountId)}: ${res.statusText}`) }
                 const jres = await res.json()
-                if (!Array.isArray(jres) || jres.length < 1) {
+                if (!Array.isArray(jres)) {
                     throw new Error(`Fetch result for account ${JSON.stringify(providerAccountId)}: ${JSON.stringify(jres)}`)
                 }
-                return jres[0]
+                return jres.length < 1 ? null : jres[0]
             },
             verificationToken: async (params: { identifier: string; token: string }) => {
                 const idFilter = `.identifier=${params.identifier}`
