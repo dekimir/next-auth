@@ -1,5 +1,6 @@
 import { runBasicTests } from "@next-auth/adapter-test"
 import { ChiselStrikeAdapter } from "../src"
+import fetch from "cross-fetch"
 
 const adapter = new ChiselStrikeAdapter('http://localhost:8080', '1234');
 
@@ -11,7 +12,8 @@ runBasicTests(
                 await adapter.deleteEverything()
             },
             session: async (sessionToken: string) => {
-                return (await adapter.getSessionAndUser(sessionToken))?.session
+                const su = await adapter.getSessionAndUser(sessionToken);
+                return su?.session
             },
             user: async (id: string) => {
                 return await adapter.getUser(id)
