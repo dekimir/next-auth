@@ -2,8 +2,7 @@ import { runBasicTests } from "@next-auth/adapter-test"
 import { ChiselStrikeAdapter } from "../src"
 import fetch from "cross-fetch"
 
-const authSecret = '1234';
-const adapter = new ChiselStrikeAdapter('http://localhost:8080', authSecret);
+const adapter = new ChiselStrikeAdapter('http://localhost:8080', '1234');
 
 runBasicTests(
     {
@@ -22,9 +21,7 @@ runBasicTests(
             account: async (providerAccountId: { provider: string; providerAccountId: string }) => {
                 const providerFilter = providerAccountId.provider ? `.provider=${providerAccountId.provider}` : ''
                 const providerAccountIdFilter = providerAccountId.providerAccountId ? `.providerAccountId=${providerAccountId.providerAccountId}` : ''
-                const res = await fetch(
-                    `http://localhost:8080/__chiselstrike/auth/accounts?${providerFilter}&${providerAccountIdFilter}`,
-                    { headers: { 'ChiselAuth': authSecret } })
+                const res = await adapter.secFetch(adapter.accounts(`?${providerFilter}&${providerAccountIdFilter}`))
                 if (!res.ok) { throw new Error(`Fetching account ${JSON.stringify(providerAccountId)}: ${res.statusText}`) }
                 const jres = await res.json()
                 if (!Array.isArray(jres)) {
@@ -35,9 +32,7 @@ runBasicTests(
             verificationToken: async (params: { identifier: string; token: string }) => {
                 const idFilter = `.identifier=${params.identifier}`
                 const tokenFilter = `.token=${params.token}`
-                const res = await fetch(
-                    `http://localhost:8080/__chiselstrike/auth/tokens?${idFilter}&${tokenFilter}`,
-                    { headers: { 'ChiselAuth': authSecret } })
+                const res = await adapter.secFetch(adapter.tokens(`?${idFilter}&${tokenFilter}`))
                 if (!res.ok) { throw new Error(`Fetching token ${JSON.stringify(params)}: ${res.statusText}`) }
                 const jres = await res.json()
                 if (!Array.isArray(jres)) {

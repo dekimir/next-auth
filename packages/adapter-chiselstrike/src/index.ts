@@ -17,24 +17,24 @@ export class ChiselStrikeAdapter implements Adapter {
         return `${this.url}/__chiselstrike/auth/${suffix}`
     }
 
-    private sessions(suffix?: string): string {
+    public sessions(suffix?: string): string {
         return this.auth('sessions') + (suffix ?? '');
     }
 
-    private accounts(suffix?: string): string {
+    public accounts(suffix?: string): string {
         return this.auth('accounts') + (suffix ?? '');
     }
 
-    private users(suffix?: string): string {
+    public users(suffix?: string): string {
         return this.auth('users') + (suffix ?? '');
     }
 
-    private tokens(suffix?: string): string {
+    public tokens(suffix?: string): string {
         return this.auth('tokens') + (suffix ?? '');
     }
 
     /// Like fetch(), but adds a header with this.password.
-    private async secFetch(input: RequestInfo, init?: RequestInit | undefined): Promise<Response> {
+    public async secFetch(input: RequestInfo, init?: RequestInit | undefined): Promise<Response> {
         init ??= {}
         init.headers = new Headers(init.headers)
         init.headers.set('ChiselAuth', this.secret)
