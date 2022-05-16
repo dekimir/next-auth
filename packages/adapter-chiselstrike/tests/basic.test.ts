@@ -20,29 +20,29 @@ runBasicTests(
             },
             account: async (providerAccountId: { provider: string; providerAccountId: string }) => {
                 const providerFilter = providerAccountId.provider ? `.provider=${providerAccountId.provider}` : ''
-                const providerAccountIdFilter = providerAccountId.providerAccountId ? `.providerAccountId=${providerAccountId.providerAccountId}` : ''
-                const res = await adapter.secFetch(adapter.accounts(`?${providerFilter}&${providerAccountIdFilter}`))
-                if (!res.ok) { throw new Error(`Fetching account ${JSON.stringify(providerAccountId)}: ${res.statusText}`) }
-                const jres = await res.json()
-                if (!Array.isArray(jres)) {
-                    throw new Error(`Fetch result for account ${JSON.stringify(providerAccountId)}: ${JSON.stringify(jres)}`)
-                }
-                return jres.length < 1 ? null : jres[0]
+                const providerAccountIdFilter =
+                    providerAccountId.providerAccountId ? `.providerAccountId=${providerAccountId.providerAccountId}` : ''
+                return await adFetch(
+                    adapter.accounts(`?${providerFilter}&${providerAccountIdFilter}`),
+                    `account ${JSON.stringify(providerAccountId)}`)
             },
             verificationToken: async (params: { identifier: string; token: string }) => {
                 const idFilter = `.identifier=${params.identifier}`
                 const tokenFilter = `.token=${params.token}`
-                const res = await adapter.secFetch(adapter.tokens(`?${idFilter}&${tokenFilter}`))
-                if (!res.ok) { throw new Error(`Fetching token ${JSON.stringify(params)}: ${res.statusText}`) }
-                const jres = await res.json()
-                if (!Array.isArray(jres)) {
-                    throw new Error(`Fetch result for token ${JSON.stringify(params)}: ${JSON.stringify(jres)}`)
-                }
-                if (jres.length < 1) { return null }
-                let token = { ...jres[0], expires: new Date(jres[0].expires) }
-                delete token.id
-                return token
+                let token = await adFetch(
+                    adapter.tokens(`?${idFilter}&${tokenFilter}`),
+                    `Fetching token ${JSON.stringify(params)}`)
+                return token ? { ...token, expires: new Date(token.expires), id: undefined} : null
             }
         }
     }
 )
+
+/// Fetches an object via adapter, performing common error-checking.
+async function adFetch(url: string, what: string): Promise<null | { [_: string]: string }> {
+    const res = await adapter.secFetch(url);
+    if (!res.ok) { throw new Error(`Fetching ${what}: ${res.statusText}`); }
+    const jres = await res.json();
+    if (!Array.isArray(jres)) { throw new Error(`Fetch result for ${what}: ${JSON.stringify(jres)}`); }
+    return jres.length < 1 ? null : jres[0];
+}
