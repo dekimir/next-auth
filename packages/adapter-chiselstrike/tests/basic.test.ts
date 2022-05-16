@@ -32,7 +32,7 @@ runBasicTests(
                 let token = await adFetch(
                     adapter.tokens(`?${idFilter}&${tokenFilter}`),
                     `Fetching token ${JSON.stringify(params)}`)
-                return token ? { ...token, expires: new Date(token.expires), id: undefined} : null
+                return token ? { ...token, expires: new Date(token.expires), id: undefined } : null
             }
         }
     }
@@ -41,7 +41,7 @@ runBasicTests(
 /// Fetches an object via adapter, performing common error-checking.
 async function adFetch(url: string, what: string): Promise<null | { [_: string]: string }> {
     const res = await adapter.secFetch(url);
-    if (!res.ok) { throw new Error(`Fetching ${what}: ${res.statusText}`); }
+    if (!res.ok) { return null }
     const jres = await res.json();
     if (!Array.isArray(jres)) { throw new Error(`Fetch result for ${what}: ${JSON.stringify(jres)}`); }
     return jres.length < 1 ? null : jres[0];
