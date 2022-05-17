@@ -69,8 +69,10 @@ If running a ChiselStrike backend in the cloud, please edit all instances of `ne
 Build and test:
 ```bash
 cd next-auth/packages/adapter-chiselstrike/
-pnpm test
+pnpm test -- tests/basic.test.ts
+pnpm test -- tests/custom.test.ts
 ```
+(Unfortunately, the custom tests interfere with basic tests if run in parallel, so we run them separately.)
 
 ## License
 
