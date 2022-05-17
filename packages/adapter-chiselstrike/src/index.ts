@@ -79,8 +79,12 @@ export class ChiselStrikeAdapter implements Adapter {
 
     // deleteUser?: ((userId: string) => Promise<void> | Awaitable<AdapterUser | null | undefined>) | undefined;
     deleteUser = async (userId: string): Promise<AdapterUser | null | undefined> => {
-        const resp = await this.secFetch(this.users(`/${userId}`), { method: 'DELETE' })
+        let resp = await this.secFetch(this.users(`/${userId}`), { method: 'DELETE' })
         await ensureOK(resp, `deleting user ${userId}`)
+        resp = await this.secFetch(this.sessions(`?.userId=${userId}`), { method: 'DELETE' })
+        await ensureOK(resp, `deleting sessions for ${userId}`)
+        resp = await this.secFetch(this.accounts(`?.userId=${userId}`), { method: 'DELETE' })
+        await ensureOK(resp, `deleting accounts for ${userId}`)
         return null
     }
 
