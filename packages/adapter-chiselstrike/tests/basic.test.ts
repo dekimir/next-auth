@@ -12,8 +12,8 @@ runBasicTests(
                 await adapter.deleteEverything()
             },
             session: async (sessionToken: string) => {
-                const su = await adapter.getSessionAndUser(sessionToken);
-                return su ? su.session : null
+                const s = await adFetch(adapter.sessions(`?.sessionToken=${sessionToken}`), `session ${sessionToken}`)
+                return s ? { ...s, expires: new Date(s.expires) } : null
             },
             user: async (id: string) => {
                 return await adapter.getUser(id)
