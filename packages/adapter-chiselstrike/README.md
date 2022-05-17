@@ -1,4 +1,20 @@
-# ChiselStrike Adapter -- NextAuth.js
+<p align="center">
+   <br/>
+   <a href="https://next-auth.js.org" target="_blank"><img height="64px" src="https://next-auth.js.org/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="logo.svg" />
+   <h3 align="center"><b>ChiselStrike Adapter</b> - NextAuth.js</h3>
+   <p align="center">
+   Open Source. Full Stack. Own Your Data.
+   </p>
+   <p align="center" style="align: center;">
+      <img src="https://github.com/nextauthjs/adapters/actions/workflows/release.yml/badge.svg" alt="Build Test" />
+      <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/chiselstrike-adapter/latest" alt="Bundle Size"/>
+      <img src="https://img.shields.io/npm/v/@next-auth/chiselstrike-adapter" alt="@next-auth/chiselstrike-adapter Version" />
+   </p>
+</p>
+
+## Overview
+
+This is the ChiselStrike Adapter for [`next-auth`](https://next-auth.js.org). This package can only be used in conjunction with the primary next-auth package. It is not a standalone package.
 
 ## Getting Started
 
