@@ -29,11 +29,11 @@
     ],
     "dependencies": {
         "cross-fetch": "^3.1.5",
-        "next-auth": "workspace:^0.0.0"
+        "next-auth": "workspace:"
     },
     "peerDependencies": {
         "cross-fetch": "^3.1.5",
-        "next-auth": "workspace:^0.0.0"
+        "next-auth": "workspace:"
     },
     "devDependencies": {
         "@next-auth/adapter-test": "workspace:^0.0.0",
